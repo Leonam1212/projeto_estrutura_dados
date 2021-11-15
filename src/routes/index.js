@@ -56,7 +56,7 @@ console.log(authenticated);
       .string()
       .required("Campo obrigatório!"),
     old_password: yup.string().required("Senha antiga é obrigatório"),
-    new_password: yup.string().required("Campo obrigatório!")
+    password: yup.string().required("Campo obrigatório!")
   });
 
 

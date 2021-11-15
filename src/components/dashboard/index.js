@@ -23,8 +23,6 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    let subtitle;
-
     const {
       register,
       handleSubmit,
@@ -41,7 +39,7 @@ class Dashboard extends React.Component {
 
     const onSubmitFunction = (data) => {
       // const newData = { name, contact, old_password, new_password};
-
+        console.log(data)
       api
         .put(`/users/profile`, data, {
           headers: { Authorization: `Bearer ${this.state.token}` },
@@ -142,9 +140,9 @@ class Dashboard extends React.Component {
                 size="medium"
                 color="primary"
                 type="password"
-                {...register("new_password")}
-                error={!!errors.new_password}
-                helperText={errors.new_password?.message}
+                {...register("password")}
+                error={!!errors.password}
+                helperText={errors.password?.message}
               />
             </div>
             <Button redSchema type="submit">
