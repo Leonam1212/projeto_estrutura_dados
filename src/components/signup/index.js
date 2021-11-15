@@ -7,80 +7,56 @@ import {
   FormControl,
 } from "@material-ui/core";
 import { Container, Background, Content, AnimationContainer } from "./style";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory, withRouter } from "react-router-dom";
 import Button from "../button/index";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import api from "../../services/api"
-
-
+import api from "../../services/api";
 
 class Signup extends React.Component {
-    onSubmitFunction (data){
-        console.log(data)
-    }
   render() {
     const { authenticated } = this.props;
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = this.props
-  
 
-    // const schema = yup.object().shape({
-    //   name: yup.string().required("Campo obrigatório!!"),
-    //   email: yup.string().email("Email invalido").required("Campo obrigatório"),
-    //   password: yup
-    //     .string()
-    //     .min(6, "Minimo de 6 caracteres")
-    //     .required("Campo obrigatório"),
-    //   confirmPassword: yup
-    //     .string()
-    //     .oneOf([yup.ref("password")], "Senhas diferentes")
-    //     .required("Campo obrigatório"),
-    //   contact: yup.string().required("Campo obrigatório"),
-    //   bio: yup.string().required("Campo obrigatório!!"),
-    //   course_module: yup.string(),
-    // });
-  
-    // const {
-    //   register,
-    //   handleSubmit,
-    //   formState: { errors },
-    // } = useForm({
-    //   resolver: yupResolver(schema),
-    // });
-  
-    // const onSubmitFunction = ({
-    //   name,
-    //   password,
-    //   email,
-    //   bio,
-    //   contact,
-    //   course_module,
-    // }) => {
-    //   const user = { name, password, email, bio, contact, course_module };
-    //   api
-    //     .post("/users", user)
-    //     .then((_) => {
-    //       toast.success("Sucesso ao criar a conta!");
-    //       console.log(_)
-         
-    //     })
-    //     .catch((err) => {
-    //       toast.error("Erro ao criar a conta. Verifique os campos!!");
-    //     });
-    // };
-  
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = this.props;
+
+    const redirectLogin = () => {
+      const { history } = this.props;
+      if (history) history.push("/signin");
+    };
+
+    const onSubmitFunction = ({
+      name,
+      password,
+      email,
+      bio,
+      contact,
+      course_module,
+    }) => {
+      const user = { name, password, email, bio, contact, course_module };
+      api
+        .post("/users", user)
+        .then((_) => {
+          toast.success("Sucesso ao criar a conta!");
+          return redirectLogin();
+        })
+        .catch((err) => {
+          toast.error("Erro ao criar a conta. Verifique os campos!!");
+        });
+    };
+
+    if (authenticated) {
+      return <Redirect to="dashboard" />;
+    }
+
     return (
       <Container>
         <Background />
         <Content>
           <AnimationContainer>
-            <form onSubmit = {handleSubmit(this.onSubmitFunction)}>
+            <form onSubmit={handleSubmit(onSubmitFunction)}>
               <h1>
                 HUB<span>VIX</span>
               </h1>
@@ -170,9 +146,9 @@ class Signup extends React.Component {
                     value="Primeiro módulo (Introdução ao Frontend)"
                     size="small"
                     color="primary"
-                      {...register("course_module")}
-                      error={!!errors.module_course}
-                      helperText={errors.module_course?.message}
+                    {...register("course_module")}
+                    error={!!errors.module_course}
+                    helperText={errors.module_course?.message}
                   >
                     <MenuItem value="Primeiro módulo (Introdução ao Frontend)">
                       Primeiro módulo ( Introdução ao Frontend )
@@ -202,5 +178,4 @@ class Signup extends React.Component {
     );
   }
 }
-export default Signup;
-
+export default withRouter(Signup);
