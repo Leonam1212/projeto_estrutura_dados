@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Content, AnimationContainer, Background } from "./style";
+import { Container, Content, AnimationContainer, Background, formContent } from "./style";
 import { TextField } from "@material-ui/core";
 import { Link, Redirect } from "react-router-dom";
 import Button from "../button";
@@ -23,17 +23,16 @@ class Signin extends React.Component {
 
     const onSubmitFunction = (data) => {
       api
-      .post("/sessions", data)
-      .then((response) => {
-        const { token, user } = response.data;
-        console.log(response.data);
-        localStorage.setItem("@HubVix:token", JSON.stringify(token));
-        localStorage.setItem("@HubVix:user", JSON.stringify(user));
-        this.props.setAuthenticated(true)
-        return redirectDashboard()
-      })
-      .catch((_) => toast.error("Email ou Senha invalidos"));
-    }
+        .post("/sessions", data)
+        .then((response) => {
+          const { token, user } = response.data;
+          localStorage.setItem("@HubVix:token", JSON.stringify(token));
+          localStorage.setItem("@HubVix:user", JSON.stringify(user));
+          this.props.setAuthenticated(true);
+          return redirectDashboard();
+        })
+        .catch((_) => toast.error("Email ou Senha invalidos"));
+    };
 
     if (this.props.authenticated) {
       return <Redirect to="dashboard" />;
@@ -43,7 +42,7 @@ class Signin extends React.Component {
       <Container>
         <Content>
           <AnimationContainer>
-            <form onSubmit={handleSubmit(onSubmitFunction)} >
+            <form onSubmit={handleSubmit(onSubmitFunction)}>
               <h1>
                 HUB<span>VIX</span>
               </h1>
@@ -54,9 +53,9 @@ class Signin extends React.Component {
                   variant="outlined"
                   size="medium"
                   color="primary"
-                    {...register("email")}
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
+                  {...register("email")}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
                 />
               </div>
               <div>
@@ -67,9 +66,9 @@ class Signin extends React.Component {
                   size="medium"
                   color="primary"
                   type="password"
-                    {...register("password")}
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
+                  {...register("password")}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
                 />
               </div>
               <Button redSchema type="submit">

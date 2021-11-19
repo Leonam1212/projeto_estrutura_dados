@@ -1,10 +1,14 @@
-import React, { Component, useState } from "react";
-import { Container, Content } from "./style";
+import React from "react";
+import { Container, Content, formContent } from "./style";
 import Button from "../button/index";
 import { TextField } from "@material-ui/core";
 import Modal from "react-modal";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+
+
+import { TiArrowBackOutline } from "react-icons/ti";
+import { Link } from "react-router-dom";
 const customStyles = {
   content: {
     top: "50%",
@@ -37,16 +41,21 @@ class Dashboard extends React.Component {
       this.props.setIsOpen(false);
     };
 
+    const logout = () => {
+      localStorage.clear();
+      this.props.setAuthenticated(false);
+    };
+
     const onSubmitFunction = (data) => {
-      // const newData = { name, contact, old_password, new_password};
-        console.log(data)
       api
-        .put(`/users/profile`, data, {
+        .put(`/profile`, data, {
           headers: { Authorization: `Bearer ${this.state.token}` },
         })
-        .then((_) => {
-          toast.success("Sucesso ao criar a conta!");
-          console.log(_);
+        .then((response) => {
+          const { data } = response;
+          toast.success("Sucesso ao atualizar a conta!");
+          localStorage.setItem("@HubVix:user", JSON.stringify(data));
+          document.location.reload(true);
           return closeModal();
         })
         .catch((err) => {
@@ -66,7 +75,7 @@ class Dashboard extends React.Component {
               <span>Usuário</span>: {this.state.user.name}
             </li>
             <li>
-              <span>Biografia</span>: {this.state.user.bio}
+              <span>Contato</span>: {this.state.user.contact}
             </li>
             <li>
               <span>E - mail</span>: {this.state.user.email}
@@ -78,12 +87,10 @@ class Dashboard extends React.Component {
               <span>Perfil criado em</span>: {this.state.user.created_at}
             </li>
           </ul>
-
           <Button redSchema onClick={openModal}>
             Atualizar dados
           </Button>
-        </Content>
-
+            <span style={{marginTop:"20px", opacity: "0.5", fontSize: "10px"}}>Sua senha será modificada. Lembre-se dela no próximo Login ;)</span>
         <Modal
           isOpen={this.props.modalIsOpen}
           //   onAfterOpen={afterOpenModal}
@@ -91,11 +98,11 @@ class Dashboard extends React.Component {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <h2>ATUALIZE SEUS DADOS</h2>
-          {/* <button onClick={this.closeModal}>close</button> */}
           <form onSubmit={handleSubmit(onSubmitFunction)}>
+          <h2>ATUALIZE SEUS DADOS</h2>
             <div>
               <TextField
+              style = {{width: "100%"}}
                 label="name"
                 margin="normal"
                 variant="outlined"
@@ -108,6 +115,7 @@ class Dashboard extends React.Component {
             </div>
             <div>
               <TextField
+              style = {{width: "100%"}}
                 label="Contato"
                 margin="normal"
                 variant="outlined"
@@ -121,6 +129,7 @@ class Dashboard extends React.Component {
             </div>
             <div>
               <TextField
+              style = {{width: "100%"}}
                 label="Senha antiga"
                 margin="normal"
                 variant="outlined"
@@ -134,6 +143,7 @@ class Dashboard extends React.Component {
             </div>
             <div>
               <TextField
+              style = {{width: "100%"}}
                 label="Nova senha"
                 margin="normal"
                 variant="outlined"
@@ -145,11 +155,17 @@ class Dashboard extends React.Component {
                 helperText={errors.password?.message}
               />
             </div>
-            <Button redSchema type="submit">
+            <Button style = {{width: "100%"}}redSchema type="submit">
               CONFIRMAR
             </Button>
           </form>
         </Modal>
+        </Content>
+
+
+        <Link to="/signin" className="logout" onClick={logout}>
+          <TiArrowBackOutline />
+        </Link>
       </Container>
     );
   }

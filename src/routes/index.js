@@ -11,9 +11,9 @@ import * as yup from "yup";
 const Routes = (props) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
-  console.log(modalIsOpen)
+  // console.log(modalIsOpen)
 
-console.log(authenticated);
+// console.log(authenticated);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("@HubVix:token"));
 
@@ -24,6 +24,7 @@ console.log(authenticated);
 
   const history = useHistory()
   const history2 = useHistory()
+  const history3 = useHistory()
   // REGRAS DE VALIDAÇÃO DOS FORMULÁRIOS DE CADASTRO E LOGIN
 
   const schemaSignup = yup.object().shape({
@@ -83,9 +84,7 @@ console.log(authenticated);
         <Signin {...props} {...formSignin} {...history2} authenticated = {authenticated} setAuthenticated = {setAuthenticated} />
       </Route>
       <Route path="/dashboard"   >
-        <Dashboard {...props} {...formPatchData} {...history} modalIsOpen = {modalIsOpen} setIsOpen = {setIsOpen}/>
-      </Route>
-      <Route path="/data">
+        <Dashboard {...props} {...formPatchData} {...history3} modalIsOpen = {modalIsOpen} setIsOpen = {setIsOpen} authenticated = {authenticated} setAuthenticated = {setAuthenticated} />
       </Route>
     </Switch>
   );
